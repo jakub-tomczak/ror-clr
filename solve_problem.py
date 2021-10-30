@@ -16,7 +16,7 @@ def load_ror_dataset(filename: str) -> RORDataset:
         # ignore parameters from file
         return loader_result.dataset
     except DatasetReaderException as e:
-        logging.error(f'Failed to read problem file from {filename}')
+        logging.error(f'Failed to read problem file from {filename}, cause: {e}')
         raise e
 
 def solve_problem(program_parameters: ProgramParameters) -> RORResult:
@@ -28,14 +28,8 @@ def solve_problem(program_parameters: ProgramParameters) -> RORResult:
             program_parameters.ror_parameters,
             save_all_data=True
         )
-        final_rank: List[Set[str]] = []
-        for rank_items in result.final_rank.rank:
-            if len(rank_items) > 1:
-                final_rank.append(set([item.alternative for item in rank_items]))
-            else:
-                final_rank.append(set([rank_items[0].alternative]))
-        rank_str = " -> ".join([str(item) for item in final_rank])
-        logging.info(f'Final rank is: {rank_str}')
+        logging.info(f'Final rank is: {result.final_rank.rank_to_string()}')
+        logging.info(f'Saved output to {result.output_dir}')
         return result
     except Exception as e:
         msg = f'Failed to solve problem, cause: {e}'

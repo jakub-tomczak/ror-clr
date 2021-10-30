@@ -13,3 +13,6 @@ class ProgramParameters:
     @property
     def filename(self) -> str:
         return self.__filename
+
+    def __repr__(self) -> str:
+        return f'<ProgramParameters:\nfilename: {self.__filename},\nror parameters: {self.__ror_parameters}>'

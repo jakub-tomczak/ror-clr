@@ -1,0 +1,8 @@
+{
+    "problem_files": ["./problems/buses_small.txt"],
+    "eps_values": [1e-6],
+    "aggregators": ["DefaultResultAggregator", "BordaResultAggregator"],
+    "tie_resolvers": ["CopelandTieResolver", "NoResolver"],
+    "alpha_values_number": [5],
+    "alpha_values_lists": [[0.0, 0.5, 1.0]]
+}

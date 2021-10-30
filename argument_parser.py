@@ -1,5 +1,6 @@
 from ror.RORParameters import DataValidationException, RORParameters
 from ror.loader_utils import RORParameter
+from BatchProgramParameters import BatchProgramParameters
 from ProgramParameters import ProgramParameters
 import argparse
 import logging
@@ -7,7 +8,7 @@ import logging
 
 def parse_program_arguments() -> ProgramParameters:
     parser = argparse.ArgumentParser(
-        prog='ROR-distance solver CLI',
+        prog='ROR-distance command line solver',
         description='ROR-distance solver is available as python module at https://github.com/jakub-tomczak/ror'
     )
     # default values available at:
@@ -40,7 +41,6 @@ def parse_program_arguments() -> ProgramParameters:
         help='Text file with problem definition.')
 
     args = parser.parse_args()
-    print(args)
     filename = ''
     ror_parameters = RORParameters()
     for argument, argument_value in args._get_kwargs():
@@ -59,3 +59,14 @@ def parse_program_arguments() -> ProgramParameters:
                     raise e
     parameters = ProgramParameters(ror_parameters, filename)
     return parameters
+
+def parse_batch_program_arguments() -> BatchProgramParameters:
+    parser = argparse.ArgumentParser(
+        prog='ROR-distance batch command line solver',
+        description='ROR-distance solver is available as python module at https://github.com/jakub-tomczak/ror'
+    )
+    parser.add_argument('config_file', metavar='config file', type=str,
+        help='JSON file with config for batch runner.')
+    
+    args = parser.parse_args()
+    return BatchProgramParameters(args.config_file)
