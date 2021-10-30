@@ -1,10 +1,11 @@
-from ror.RORParameters import RORParameters
+from ror.RORParameters import DataValidationException, RORParameters
 from ror.loader_utils import RORParameter
 from ProgramParameters import ProgramParameters
 import argparse
+import logging
 
 
-def parse_args() -> ProgramParameters:
+def parse_program_arguments() -> ProgramParameters:
     parser = argparse.ArgumentParser(
         prog='ROR-distance solver CLI',
         description='ROR-distance solver is available as python module at https://github.com/jakub-tomczak/ror'
@@ -39,6 +40,22 @@ def parse_args() -> ProgramParameters:
         help='Text file with problem definition.')
 
     args = parser.parse_args()
+    print(args)
+    filename = ''
     ror_parameters = RORParameters()
-    parameters = ProgramParameters(ror_parameters)
+    for argument, argument_value in args._get_kwargs():
+        if argument == 'file':
+            filename = argument_value
+            logging.info(f'Setting filename to {filename}')
+        else:
+            if argument_value is not None:
+                argument = argument.upper()
+                logging.info(f'Trying to add ROR-distance method parameter: {argument} with value: {argument_value}')
+                try:
+                    ror_parameters.add_parameter(RORParameter[argument], argument_value)
+                except DataValidationException as e:
+                    logging.error(f'Failed to set parameter {argument}, cause: {e}')
+                    # pass exception further to stop processing
+                    raise e
+    parameters = ProgramParameters(ror_parameters, filename)
     return parameters
