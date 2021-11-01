@@ -66,7 +66,7 @@ def create_configs(data) -> List[ProgramParameters]:
         assert type(data['tie_resolvers']
                     ) is list, 'Tie resolvers must be provided as a list'
         tie_resolvers = data['tie_resolvers']
-    if len(data['tie_resolvers']) < 1:
+    if len(tie_resolvers) < 1:
         tie_resolvers.append(
             RORParameters.get_default_parameter_value(RORParameter.TIE_RESOLVER))
     alpha_weights: List[List[float]] = []
@@ -138,8 +138,9 @@ def read_batch_runner_config(params: BatchProgramParameters) -> List[ProgramPara
         try:
             config_data = json.load(config)
             return create_configs(config_data)
-        except:
+        except Exception as e:
             logging.error('Failed to read data from config file.')
+            raise e
 
 
 def main():
