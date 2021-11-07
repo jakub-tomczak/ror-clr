@@ -29,7 +29,7 @@ def solve_problem(program_parameters: ProgramParameters) -> RORResult:
             save_all_data=True
         )
         logging.info(f'Final rank is: {result.final_rank.rank_to_string()}')
-        logging.info(f'Saved output to {result.output_dir}')
+        logging.info(f'Saved output to "{result.output_dir}"')
         return result
     except Exception as e:
         msg = f'Failed to solve problem, cause: {e}'
