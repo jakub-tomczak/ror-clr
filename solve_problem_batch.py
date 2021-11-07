@@ -99,8 +99,8 @@ def create_configs(data) -> List[ProgramParameters]:
             for aggregator in aggregators:
                 for tie_resolver in tie_resolvers:
                     _tie_resolver = tie_resolver
-                    if aggregator in ['BordaResultAggregator', 'CopelandResultAggregator'] and tie_resolver not in tie_resolvers:
-                        _tie_resolver = 'NoTieResolver'
+                    if aggregator in ['BordaResultAggregator', 'CopelandResultAggregator']:
+                        _tie_resolver = 'NoResolver'
                     for weights in alpha_weights:
                         for alpha_values_number in alpha_values_number_list:
                             if aggregator not in ['BordaResultAggregator', 'CopelandResultAggregator']:
@@ -160,7 +160,7 @@ def main():
             # wait so output dir is changed
             time.sleep(1)
         except Exception as e:
-            logging.error('Failed to solve problem')
+            logging.error(f'Failed to solve problem, cause: {e}')
 
     logging.info(
         f'Tried to solve problem using {all_combinations} parameter configurations.')
