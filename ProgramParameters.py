@@ -16,3 +16,11 @@ class ProgramParameters:
 
     def __repr__(self) -> str:
         return f'<ProgramParameters:\nfilename: {self.__filename},\nror parameters: {self.__ror_parameters}>'
+
+    def __eq__(self, o: object) -> bool:
+        if type(o) is ProgramParameters:
+            return o.filename == self.filename and o.ror_parameters == self.ror_parameters
+        return False
+    
+    def __hash__(self) -> int:
+        return self.ror_parameters.__hash__() * 13 + self.__filename.__hash__()*19

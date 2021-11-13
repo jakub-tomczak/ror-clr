@@ -1,5 +1,5 @@
 import json
-from typing import List
+from typing import List, Set
 
 from ror.RORParameters import RORParameters
 from ror.loader_utils import RORParameter
@@ -37,7 +37,7 @@ def program_parameters_from_values(
 
 
 def create_configs(data) -> List[ProgramParameters]:
-    program_parameters_list: List[ProgramParameters] = []
+    program_parameters_list: Set[ProgramParameters] = set()
     if 'problem_files' not in data or type(data['problem_files']) is not list:
         raise Exception(
             'problem_files key must be provided as a list in config file')
@@ -106,27 +106,31 @@ def create_configs(data) -> List[ProgramParameters]:
                             if aggregator not in ['BordaResultAggregator', 'CopelandResultAggregator']:
                                 # number of alpha values is only used in Borda and Copeland aggregators
                                 continue
-                            program_parameters_list.append(program_parameters_from_values(
+                            config = program_parameters_from_values(
                                 file,
                                 eps,
                                 aggregator,
                                 _tie_resolver,
                                 weights,
                                 alpha_values_number=alpha_values_number
-                            ))
+                            )
+                            if config not in program_parameters_list:
+                                program_parameters_list.add(config)
                         for alpha_values in alpha_values_list:
                             if aggregator not in ['DefaultResultAggregator', 'WeightedResultAggregator']:
                                 # number of alpha values is only used in Borda and Copeland aggregators
                                 continue
-                            program_parameters_list.append(program_parameters_from_values(
+                            config = program_parameters_from_values(
                                 file,
                                 eps,
                                 aggregator,
                                 _tie_resolver,
                                 weights,
                                 alpha_values=alpha_values
-                            ))
-    return program_parameters_list
+                            )
+                            if config not in program_parameters_list:
+                                program_parameters_list.add(config)
+    return list(program_parameters_list)
 
 
 def read_batch_runner_config(params: BatchProgramParameters) -> List[ProgramParameters]:
